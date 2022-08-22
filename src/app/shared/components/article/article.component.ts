@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Article } from 'src/app/core/interfaces/news.interface';
-import { Platform } from '@ionic/angular';
+import { ActionSheetController, Platform } from '@ionic/angular';
 import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
 
 @Component({
@@ -12,7 +12,11 @@ export class ArticleComponent implements OnInit {
   @Input() article: Article;
   @Input() index: number;
 
-  constructor(private iab: InAppBrowser, private platform: Platform) {}
+  constructor(
+    private iab: InAppBrowser,
+    private platform: Platform,
+    private actionSheetCtrl: ActionSheetController
+  ) {}
 
   ngOnInit() {}
 
@@ -25,5 +29,42 @@ export class ArticleComponent implements OnInit {
     window.open(this.article.url, '_blank');
   }
 
-  onClick() {}
+  async onOpenMenu() {
+    const antionSheet = await this.actionSheetCtrl.create({
+      header: 'Options',
+      buttons: [
+        {
+          text: 'delete',
+          icon: 'trash',
+          role: 'destructive',
+          cssClass: 'action-sheet-delete-button',
+        },
+        {
+          text: 'share',
+          icon: 'share-outline',
+          handler: () => this.onShareArticle(),
+        },
+        {
+          text: 'Favorite',
+          icon: 'heart-outline',
+          handler: () => this.onToggleFavorite(),
+        },
+        {
+          text: 'cancel',
+          icon: 'close-outline',
+          role: 'cancel',
+        },
+      ],
+    });
+
+    await antionSheet.present();
+  }
+
+  onShareArticle() {
+    console.log('share artice');
+  }
+
+  onToggleFavorite() {
+    console.log('favorite article');
+  }
 }

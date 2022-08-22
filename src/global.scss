@@ -32,3 +32,11 @@
 .article-source-name {
   font-size: 12px;
 }
+
+.action-sheet-delete-button,
+.action-sheet-delete-button .sc-ion-action-sheet-md {
+  color: var(--ion-color-danger) !important;
+}
+// .sc-ion-action-sheet-md {
+//   color: var(--ion-color-danger);
+// }

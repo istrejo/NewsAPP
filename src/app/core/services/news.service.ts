@@ -23,7 +23,7 @@ export class NewsService {
   constructor(private http: HttpClient) {}
 
   private executeQuery<T>(endpoint: string) {
-    // console.log('Petición realizada');
+    console.log(JSON.stringify('Petición realizada'));
     return this.http.get<T>(`${apiUrl}${endpoint}`, {
       params: {
         apiKey,
