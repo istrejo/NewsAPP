@@ -1,7 +1,14 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Article } from 'src/app/core/interfaces/news.interface';
-import { ActionSheetController, Platform } from '@ionic/angular';
+import {
+  ActionSheetButton,
+  ActionSheetController,
+  Platform,
+} from '@ionic/angular';
+
 import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
+
+import { Share } from '@capacitor/share';
 
 @Component({
   selector: 'app-article',
@@ -30,38 +37,42 @@ export class ArticleComponent implements OnInit {
   }
 
   async onOpenMenu() {
+    const normalBtns: ActionSheetButton[] = [
+      {
+        text: 'Favorite',
+        icon: 'heart-outline',
+        handler: () => this.onToggleFavorite(),
+      },
+      {
+        text: 'cancel',
+        icon: 'close-outline',
+        role: 'cancel',
+      },
+    ];
+
+    const shareBtn: ActionSheetButton = {
+      text: 'share',
+      icon: 'share-outline',
+      handler: () => this.onShareArticle(),
+    };
+
+    if (this.platform.is('capacitor')) {
+      normalBtns.unshift(shareBtn);
+    }
+
     const antionSheet = await this.actionSheetCtrl.create({
       header: 'Options',
-      buttons: [
-        {
-          text: 'delete',
-          icon: 'trash',
-          role: 'destructive',
-          cssClass: 'action-sheet-delete-button',
-        },
-        {
-          text: 'share',
-          icon: 'share-outline',
-          handler: () => this.onShareArticle(),
-        },
-        {
-          text: 'Favorite',
-          icon: 'heart-outline',
-          handler: () => this.onToggleFavorite(),
-        },
-        {
-          text: 'cancel',
-          icon: 'close-outline',
-          role: 'cancel',
-        },
-      ],
+      buttons: normalBtns,
     });
 
     await antionSheet.present();
   }
 
-  onShareArticle() {
-    console.log('share artice');
+  async onShareArticle() {
+    await Share.share({
+      text: 'Article',
+      url: this.article.url,
+    });
   }
 
   onToggleFavorite() {
