@@ -13,13 +13,19 @@ export class StorageService {
   constructor(private storage: Storage) {
     this.init();
   }
+  get getLocalArticles() {
+    return [...this._localArticles];
+  }
 
+  // Método para iniciar el storage
   async init() {
     // If using, define drivers here: await this.storage.defineDriver(/*...*/);
     const storage = await this.storage.create();
     this._storage = storage;
+    this.loadFavorites();
   }
 
+  // Guarda o remueve el articulo en favoritos
   async saveOrRemoveArticle(article: Article) {
     const existArticle = this._localArticles.find(
       (localArticle) => localArticle.title === article.title
@@ -36,9 +42,18 @@ export class StorageService {
     this._storage.set('articles', this._localArticles);
   }
 
-  // Create and expose methods that users of this service can
-  // call, for example:
-  // public set(key: string, value: any) {
-  //   this._storage?.set(key, value);
-  // }
+  // Método para cargar los favoritos
+  async loadFavorites() {
+    try {
+      const articles = await this._storage.get('articles');
+      this._localArticles = articles || [];
+    } catch (error) {}
+  }
+
+  // Evualua si un articulo está en favoritos
+  articleInFavorite(article: Article) {
+    return !!this._localArticles.find(
+      (localArticle) => localArticle.title === article.title
+    );
+  }
 }
