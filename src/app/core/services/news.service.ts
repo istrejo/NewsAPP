@@ -9,6 +9,7 @@ import {
 
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { storedArticlesByCategory } from 'src/app/data/mock-news';
 
 const apiKey: string = environment.apiKey;
 const apiUrl: string = 'https://newsapi.org/v2';
@@ -18,7 +19,8 @@ const apiUrl: string = 'https://newsapi.org/v2';
   providedIn: 'root',
 })
 export class NewsService {
-  private articlesByCategoryAndPage: ArticlesByCategoryAndPage = {};
+  private articlesByCategoryAndPage: ArticlesByCategoryAndPage =
+    storedArticlesByCategory;
 
   constructor(private http: HttpClient) {}
 
@@ -43,6 +45,8 @@ export class NewsService {
     category: string,
     loadMore: boolean = false
   ): Observable<Article[]> {
+    return of(this.articlesByCategoryAndPage[category].articles);
+
     if (loadMore) {
       return this.getArticlesByCategory(category);
     }

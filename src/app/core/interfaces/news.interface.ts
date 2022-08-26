@@ -11,7 +11,7 @@ export interface Article {
   description?: string;
   url: string;
   urlToImage?: string;
-  publishedAt: Date;
+  publishedAt: string | Date;
   content?: string;
 }
 
