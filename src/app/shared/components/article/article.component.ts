@@ -53,14 +53,14 @@ export class ArticleComponent implements OnInit {
         handler: () => this.onToggleFavorite(),
       },
       {
-        text: 'cancel',
-        icon: 'close-outline',
-        role: 'cancel',
-      },
-      {
         text: 'share',
         icon: 'share-outline',
         handler: () => this.onShareArticle(),
+      },
+      {
+        text: 'cancel',
+        icon: 'close-outline',
+        role: 'cancel',
       },
     ];
 
