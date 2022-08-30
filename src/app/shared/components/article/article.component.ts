@@ -33,7 +33,7 @@ export class ArticleComponent implements OnInit {
   ngOnInit() {}
 
   openArticle() {
-    if (this.platform.is('ios') || this.platform.is('android')) {
+    if (this.platform.is('hybrid')) {
       const browser = this.iab.create(this.article.url);
 
       browser.show();
@@ -57,17 +57,22 @@ export class ArticleComponent implements OnInit {
         icon: 'close-outline',
         role: 'cancel',
       },
+      {
+        text: 'share',
+        icon: 'share-outline',
+        handler: () => this.onShareArticle(),
+      },
     ];
 
-    const shareBtn: ActionSheetButton = {
-      text: 'share',
-      icon: 'share-outline',
-      handler: () => this.onShareArticle(),
-    };
+    // const shareBtn: ActionSheetButton = {
+    //   text: 'share',
+    //   icon: 'share-outline',
+    //   handler: () => this.onShareArticle(this.article.url),
+    // };
 
-    if (this.platform.is('capacitor')) {
-      normalBtns.unshift(shareBtn);
-    }
+    // if (this.platform.is('capacitor')) {
+    // normalBtns.unshift(shareBtn);
+    // }
 
     const antionSheet = await this.actionSheetCtrl.create({
       header: 'Options',
@@ -79,6 +84,7 @@ export class ArticleComponent implements OnInit {
 
   async onShareArticle() {
     await Share.share({
+      title: this.article.title,
       text: 'Article',
       url: this.article.url,
     });
