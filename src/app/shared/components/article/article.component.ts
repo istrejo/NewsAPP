@@ -4,6 +4,7 @@ import {
   ActionSheetButton,
   ActionSheetController,
   Platform,
+  ToastController,
 } from '@ionic/angular';
 
 import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
@@ -25,7 +26,8 @@ export class ArticleComponent implements OnInit {
     private iab: InAppBrowser,
     private platform: Platform,
     private actionSheetCtrl: ActionSheetController,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private toastCtrl: ToastController
   ) {}
 
   ngOnInit() {}
@@ -83,6 +85,17 @@ export class ArticleComponent implements OnInit {
   }
 
   onToggleFavorite() {
-    this.storageService.saveOrRemoveArticle(this.article);
+    this.storageService
+      .saveOrRemoveArticle(this.article)
+      .then((res) => this.presentToast(res));
+  }
+
+  async presentToast(res) {
+    const toast = await this.toastCtrl.create({
+      message: res ? 'added to favorites.' : 'removed from favorites',
+      duration: 2000,
+      color: 'light',
+    });
+    toast.present();
   }
 }

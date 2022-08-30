@@ -13,13 +13,20 @@ export class Tab1Page implements OnInit {
   infiniteScroll: IonInfiniteScroll;
   articles: Article[] = [];
 
+  selectedCategory: string = 'business';
+
   constructor(private newsService: NewsService) {}
 
   ngOnInit(): void {
-    this.newsService.getTopHeadlines().subscribe((articles) => {
-      // console.log(articles);
-      this.articles.push(...articles);
-    });
+    this.newsService
+      .getTopHeadlinesByCategory(this.selectedCategory)
+      .subscribe((articles) => {
+        this.articles = [...articles];
+      });
+    // this.newsService.getTopHeadlines().subscribe((articles) => {
+    //   // console.log(articles);
+    //   this.articles.push(...articles);
+    // });
   }
 
   loadData() {

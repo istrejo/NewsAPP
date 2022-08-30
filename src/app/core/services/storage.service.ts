@@ -30,16 +30,20 @@ export class StorageService {
     const existArticle = this._localArticles.find(
       (localArticle) => localArticle.title === article.title
     );
+    let added: boolean = false;
 
     if (existArticle) {
       this._localArticles = this._localArticles.filter(
         (localArticle) => localArticle.title !== article.title
       );
+      added = false;
     } else {
       this._localArticles = [article, ...this._localArticles];
+      added = true;
     }
 
     this._storage.set('articles', this._localArticles);
+    return added;
   }
 
   // Método para cargar los favoritos
